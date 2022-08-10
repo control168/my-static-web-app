@@ -1,0 +1,227 @@
+
+<html>
+    <Label name="LabelArea">
+        <div name="display" id='display' style="position:absolute; height: 100px; width: 100px; top:100; left:100;  background-image: url('https://i.ibb.co/BwLfFf5/smallcar.png');background-size: contain; z-index: 10; transform:scaleX(1);" draggable='true'></div>
+        <div id="homeIcon" style="position:absolute; height: 70px; width: 100px; top:200; left:200; background-image: url('https://i.ibb.co/Mk2rbhZ/home.png');background-size: contain; z-index: 0;" draggable="true"></div>
+        <div id="drag-source" style="position:absolute; height: 70px; width: 100px; top:400; left:200; ;background-color: rgb(255, 10, 78); z-index: 0;" draggable="true"></div>
+        <div id="drop-target" style="position:absolute; height: 70px; width: 100px; top:400; left:700; ;background-color: rgb(31, 232, 31); z-index: 0;" draggable="true"></div>
+    </Label>
+    <button>Click Background Color !</button>
+    <button>Click Me!</button>
+    <input type="text">
+    
+</html>
+<script>
+    const btns = document.querySelectorAll('button');
+    let input = document.querySelector('input');
+    let display = document.querySelector('div');
+    let label = document.querySelector('Label');
+    let homeIcon = document.getElementById('homeIcon');
+    let dragSource = document.getElementById('drag-source');
+    let dropTarget = document.getElementById('drop-target');
+    console.log(dragSource)
+    console.log(dropTarget)
+    
+    function random(number) {
+        return Math.floor(Math.random() * (number+1));
+    }
+
+    for (const btn of btns ) {
+        btn.addEventListener('click', (event) => {
+            event.stopPropagation()
+            const rndCol = `rgb(${random(255)}, ${random(255)}, ${random(255)})`
+            document.body.style.background = rndCol
+            console.log('btn is clicked');
+        })
+    }
+    input.addEventListener('keydown', (event) => {
+        display.style.top  = '100px'
+        display.style.left = '100px'
+        console.log('input is triggered');
+    })
+
+    label.addEventListener('click', (e) =>{
+        //e.stopPropagation()
+        console.log('Label is clicked')
+    })
+    
+
+    function moveDirection (direction, repeat) {
+        console.log('dir = '+direction+','+repeat)
+        const display = document.querySelector('div') 
+        display.style.position = 'absolute';
+        let increase = repeat ? 10: 5
+        switch (direction) {
+            case 'Up':
+                display.style.top  = (display.offsetTop - increase) +'px'
+                display.style.transform = "rotate(-90deg)"
+                break;
+            case 'Down':
+                display.style.top  = (display.offsetTop + increase) +'px'
+                display.style.transform = "rotate(90deg)"
+                break
+            case 'Right':
+                display.style.left = (display.offsetLeft + increase) +'px'
+                display.style.transform = "scaleX(1)"
+                break
+            case 'Left':
+                display.style.left = (display.offsetLeft - increase) +'px'
+                display.style.transform = "scaleX(-1)"
+                break
+            case 'UpRight':
+                display.style.left = (display.offsetLeft + increase) +'px'
+                display.style.top  = (display.offsetTop - increase) +'px'
+                console.log('increase='+increase)
+                break
+            case 'UpLeft':
+                display.style.left = (display.offsetLeft - increase) +'px'
+                display.style.top  = (display.offsetTop - increase) +'px'
+                console.log('increase='+increase)
+                break
+            case 'DownRight':
+                display.style.left = (display.offsetLeft + increase) +'px'
+                display.style.top  = (display.offsetTop + increase) +'px'
+                console.log('increase='+increase)
+                break
+            case 'DownLeft':
+                display.style.left = (display.offsetLeft - increase) +'px'
+                display.style.top  = (display.offsetTop + increase) +'px'
+                break
+            default:
+                break
+        }
+    }
+    
+    
+    let comboKeys = new Array();
+    function storeKeys(e) {
+        //console.log("e.code2 = "+e.code+","+e.repeat);
+        
+        if ( e.code == 'ArrowRight' || e.code == 'ArrowUp' || e.code == 'ArrowLeft' || e.code == 'ArrowDown') {
+            comboKeys[e.code] = true;
+        }    
+      
+       if ( ( comboKeys['ArrowUp'] ) && ( !comboKeys['ArrowRight'])&& ( !comboKeys['ArrowDown'])&& ( !comboKeys['ArrowLeft']) )
+            moveDirection('Up', e.repeat)
+
+        if ( ( !comboKeys['ArrowUp'] ) && ( comboKeys['ArrowRight'])&& ( !comboKeys['ArrowDown'])&& ( !comboKeys['ArrowLeft']) )
+            moveDirection('Right', e.repeat)
+        
+        if ( ( !comboKeys['ArrowUp'] ) && ( !comboKeys['ArrowRight'])&& ( comboKeys['ArrowDown'])&& ( !comboKeys['ArrowLeft']) )
+            moveDirection('Down', e.repeat)
+        
+        if ( ( !comboKeys['ArrowUp'] ) && ( !comboKeys['ArrowRight'])&& ( !comboKeys['ArrowDown'])&& ( comboKeys['ArrowLeft']) )
+            moveDirection('Left', e.repeat)
+
+
+        if (comboKeys['ArrowRight'] && comboKeys['ArrowUp']) {
+            moveDirection('UpRight', e.repeat)
+            console.log('moving right + up!')
+        }
+        if (comboKeys['ArrowRight'] && comboKeys['ArrowUp']) {
+            moveDirection('UpRight', e.repeat)
+            console.log('moving right + up!')
+        }
+        if (comboKeys['ArrowRight'] && comboKeys['ArrowDown']) {
+            moveDirection('DownRight', e.repeat)
+            console.log('moving right + down!')
+        }
+        if (comboKeys['ArrowLeft'] && comboKeys['ArrowUp']) {
+            moveDirection('UpLeft', e.repeat)
+            console.log('moving left + up!')
+        }
+        if (comboKeys['ArrowLeft'] && comboKeys['ArrowDown']) {
+            moveDirection('DownLeft', e.repeat)
+            console.log('moving left + down!')
+        }
+        
+    }
+    function cleanKeys(e) {
+
+        //if ( e.code == 'ArrowRight' || e.code == 'ArrowUp' || e.code == 'ArrowLeft' || e.code == 'ArrowDown') {
+            comboKeys[e.code] = false;
+        //} 
+
+        //console.log(comboKeys);
+ 
+    }
+    function MouseDown(e) {
+        e.stopPropagation()
+        e.preventDefault()
+        console.log('MouseDown')
+       
+        display.style.top = e.clientY - 50+"px";
+        display.style.left = e.clientX - 50+ "px";
+        document.onmousemove = MouseDown  // 重複呼叫自己取得最新位置
+        document.onmouseup = MouseUp      // 抓到mouseup event 要放開
+    }
+    
+    function MouseUp() {
+    /* stop moving when mouse button is released:*/
+        document.onmouseup = null;
+        document.onmousemove = null;
+    }
+
+    function onDrag(e) {
+ 
+        e.stopPropagation()
+        e.preventDefault()
+        //display.style.top = e.clientY - 50+"px";
+        //display.style.left = e.clientX - 50+ "px";
+        console.log('onDrag!')
+        
+    }
+    function onDrop(e) {
+ 
+        e.stopPropagation()
+        e.preventDefault()
+       
+        let id = e.dataTransfer.getData('text/plain')
+        console.log('onDrop!'+id)
+        e.target.appendChild(document.querySelector('#'+id))
+        //document.querySelector('#'+id).style.top = e.clientY
+        //document.querySelector('#'+id).style.left = e.clientX
+        
+    }
+    function onDragOver(e) {
+    
+        e.stopPropagation()
+        e.preventDefault()
+        console.log('onDragOver!')
+        
+    }
+    function onDragStart(e) {
+        //event.dataTransfer.setData('text/html', null); 
+        //e.stopPropagation()
+        //e.preventDefault()
+ 
+        console.log('onDragStart!'+e.target.id)
+        e.dataTransfer.setData('text/plain', e.target.id)
+    }
+    function cancelDefault (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        return false
+    }
+
+    //window.addEventListener('keydown', moveIcon);
+    window.addEventListener('keydown', storeKeys);
+    window.addEventListener('keyup', cleanKeys);
+    //display.addEventListener('mousedown', MouseDown)
+    display.addEventListener('dragstart', onDragStart)
+    display.addEventListener('drag', onDrag)
+   // display.addEventListener('drag', dragMe)
+   // homeIcon.addEventListener('dragover', dragMe)
+   // homeIcon.addEventListener('drop', dropMe)
+   // display.addEventListener('dragenter', cancelDefault)
+   // display.addEventListener('dragover', cancelDefault)
+
+   dragSource.addEventListener('dragstart', onDragStart)
+   dragSource.addEventListener('drag', onDrag)
+   
+   dropTarget.addEventListener('drop', onDrop)
+   // 以下這兩個事件一定要加上，否則上面一行的 drop event 無效
+   dropTarget.addEventListener('dragenter', cancelDefault) 
+   dropTarget.addEventListener('dragover', cancelDefault)
+
+</script>
