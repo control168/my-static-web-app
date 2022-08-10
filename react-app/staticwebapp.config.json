@@ -1,6 +1,7 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
+    "rewrite": "/game.html",
     "exclude": ["*.{css,scss,js,png,gif,ico,jpg,svg}"]
   }
 }
